@@ -11,10 +11,6 @@ public class Parsing {
         return n * factorialUsingRecursion(n - 1);
     }
 
-//    public static double koeff_even (int n) {
-//        return factorialUsingRecursion (n)/(factorialUsingRecursion(n/2)*factorialUsingRecursion(n-n/2))/Math.pow(2,n);
-//    }
-
     public static String dividing(String s) {
         String new_s = "";
         String res_str = "";
@@ -49,7 +45,6 @@ public class Parsing {
             }
         }
         res_str += s.substring(prevoius_end,s.length());
-        // new_s = s.replaceAll("\\/\\(x\\^2\\+y\\^2\\)(.*?)($|\\+|-)", "R");
         return res_str;
     }
     public static String[] parse_to_array(String s, double r){//парсим строку из "x^2-5y+3" в массив: [+x^2, -5y, +3]
@@ -257,14 +252,14 @@ public class Parsing {
                 summ_all_sin[0][i] = result[i];
             }
             if (i == 1) {
-                summ_all_sin[1][i] = result[i];// Math.pow(r,n) *
+                summ_all_sin[1][i] = result[i];
                 break;
             }
         }
         double koeff = 0;
-        for (int i = result.length-1; i > 1; i--) {//LAST UPDATE
+        for (int i = result.length-1; i > 1; i--) {
             if (result[i]!=0) {
-                koeff = result[i];//Math.pow(r,n)*
+                koeff = result[i];
                 if(i%2==0) {
                     temp = koeff_sin_even(i);
                     for(int k = 0; k < temp.length; k++) {
@@ -279,7 +274,6 @@ public class Parsing {
                 }
             }
         }
-        //summ_all_sin[1][0] = summ_all_sin[0][0];
         return summ_all_sin;
     }
 
@@ -288,22 +282,10 @@ public class Parsing {
         double[] array_cos = null;//массив с коэфф разложения косинуса
         array_cos = parentheses_for_cos(n, x_0, r);
 
-//        for (int i =0; i < array_cos.length; i++) {
-//            System.out.println(array_cos[i]);
-//        }
-//
-//        System.out.println("\nSin"); UPDATE
-        //double[] array_sin_even = koeff_sin_even(m);//массив с коэфф разложения синуса (так как его степень четная, то он раскладывается по косинусам)
         double[][] array_sin = parentheses_for_sin(m, y_0, r);
-//        System.out.println("SIN FROM ARRAY SIN");
-//        for (int i = 0; i < array_sin[0].length; i++) {
-//            System.out.print(array_sin[1][i] + "   ");
-//        }
+
         double[] array_sin_even = array_sin[0];
-//        for (int i =0; i < array_sin_even.length; i++) {
-//            System.out.println(array_sin_even[i]);
-//        }
-//        System.out.println("\nRes");
+
         //используем формулу умножения cos(a) * cos(b) = 1/2 * (cos(a-b) + cos(a+b)) (понижали степени у тригонометрических функций, чтобы ее использовать)
         //рассмотрим два примера:    x^2*y^2                             &&                     x*y^4:
         //                [0.5, 0, 0.5] * [0.5, 0, -0.5]                          [0, 1, 0, 0, 0] * [0.375, 0, -0.5, 0, 0.125]
@@ -316,21 +298,13 @@ public class Parsing {
         //                res[2+2] = -0.125 - крайний эелемент на 4-ом месте
         //т.е. коэфф для смешанного произведения, которое раскладывается
         //только по косинусам: [0.125, 0, 0, 0, -0.125] = 1/8-1/8cos(4phi)
-        //double mult = 0;
+
         for (int i = 0; i < array_cos.length; i++) {//проходим по массиву коэфф от х
             for(int j = 0; j < array_sin_even.length; j++) {//проходим по массиву коэфф от у
-                //if (i==0) {
-                //   mult = Math.pow(r,m);
-                //}
-                //else {
-                //    mult = Math.pow(1,m);
-                //}
                 result[i+j]+=0.5*array_cos[i]*array_sin_even[j];//в элемент массива с суммой индексов массивов кос и син записываем полусумму коэфф
                 result[Math.abs(i-j)]+=0.5*array_cos[i]*array_sin_even[j];//в элемент массива с разностью индексов массивов кос и син записываем полуразность коэфф
-                //System.out.println("i: "+i+"  j: "+j+" r "+0.5*array_cos[i]*array_sin_even[j]);
             }
         }
-
         for (int i =0; i < result.length; i++) {
             System.out.println(result[i]);
         }
@@ -344,18 +318,9 @@ public class Parsing {
         double[] array_cos = null;//массив с коэфф разложения косинуса
         array_cos = parentheses_for_cos(n, x_0, r);
 
-//        for (int i =0; i < array_cos.length; i++) {
-//            System.out.println(array_cos[i]);
-//        }
-
-        // System.out.println("\nSin");
         double[][] array_sin = parentheses_for_sin(m, y_0, r);
         double[] array_sin_odd = array_sin[1];//разложение у по нечетной степени, что всегда дает разложение по синусам
 
-//        for (int i =0; i < array_sin_odd.length; i++) {
-//            System.out.println(array_sin_odd[i]);
-//        }
-//        System.out.println("\nRes");
         //понижали степень, чтобы использовать формулу умножения sin(a) * cos(b) = 0.5 (sin(a-b) + sin(a+b))
         // cos(phi)^2*sin(phi)^3 -> cosphi: [0.5, 0, 0.5, 0] (дополнили нулем в конце), sinphi: [0, 0.75, 0, -0.25]
         // res[0+0]=res[1+1]=res[2+2]=res[3+3]==0
@@ -364,35 +329,14 @@ public class Parsing {
         //+3/8sin(phi)*cos*2phi) = 3/16 (-sin(phi)+sin(3phi))
         //-1/8sin(3phi_*cos(2phi) = -1/16(sin(phi)+sin(5phi))
         //=> [0, 1/8, 0, 1/16, 0 , -1/16] - sinphi
-//        for (int i = 1; i < array_cos.length; i++) {
-//            for(int j = 0; j < array_sin_odd.length; j++) {
-//                result[i+j]+=0.5*array_cos[i]*array_sin_odd[j];//на месте суммы индексом массиво кос и син находим полусумму коэфф
-//                if(i==j) {
-//                    result[Math.abs(i - j)] = 0;//умножая чет из син (которые равны 0) на любое место в косинусе = 0; умножая нечет из кос (которые равны 0) на любое местов син = 0
-//                }else{
-//                    if(i<j) {
-//                        result[Math.abs(i - j)] += 0.5 * array_cos[i] * array_sin_odd[j];
-//                    }else{
-//                        result[Math.abs(i - j)] += -0.5 * array_cos[i] * array_sin_odd[j];
-//                    }
-//                }
-////                System.out.println("i: " + i + "  j: " + j + " r " +result[4]);
-////                if((j+i)==4 || Math.abs(i - j)==4) {
-////                    System.out.println("i: " + i + "  j: " + j + " r " + 0.5 * array_cos[i] * array_sin_odd[j]);
-////                }
-//            }
-//        }
-
-//        array_cos = new double[]{0.0,1.0,0.0,0.0,0.0,0.0};
-//        array_sin_odd = new double[]{0.0,1.0,0.0,0.0,0.0,0.0};
-//        result = new double[11];
+        
         // получение константы
         for(int j = 0; j < array_sin_odd.length; j++) {
-            result[j] = array_cos[0] * array_sin_odd[j];//Math.pow(r,m) *
+            result[j] = array_cos[0] * array_sin_odd[j];
         }
         for (int i = 1; i < array_cos.length; i++) {
             for(int j = 0; j < array_sin_odd.length; j++) {
-                double mult = 0.5 * array_cos[i]*array_sin_odd[j];//* Math.pow(r,m)
+                double mult = 0.5 * array_cos[i]*array_sin_odd[j];
                 double koeff1 = 1.0;
                 if(j<i){
                     koeff1 = -1.0;
@@ -423,13 +367,10 @@ public class Parsing {
             int position_ln = s.indexOf("ln");
             if (position_ln != -1) {
                 position_ln += 2;
-                //s.substring(position_ln+2);
             }
             else {
                 res = new double[]{Double.parseDouble(s), 0.0, 0.0, 0.0};
             }
-
-            //   return  res;
         }
         double power_of_x = 0;
         if (!(position_x == -1) && position_y == -1) {
@@ -449,7 +390,6 @@ public class Parsing {
                 power_of_x = 1;
             }
             res = new double[]{Double.parseDouble(temp_for_lenght), power_of_x , 0.0, 0.0};
-            //   return  res;
         }
 
         double power_of_y = 0;
@@ -470,7 +410,6 @@ public class Parsing {
                 power_of_y = 1;
             }
             res = new double[]{Double.parseDouble(koeff_before), 0.0 , power_of_y, 0.0};
-            //  return  res;
         }
 
         if (!(position_x == -1) && !(position_y == -1)) {
@@ -485,7 +424,7 @@ public class Parsing {
             if(koeff_before.length()==1) {
                 koeff_before += "1";
             }
-            if (position_x+2 < s.length() && s.toCharArray()[position_x+1]=='^') {//изменение 11.02 23:20 добавила position_x+2 < s.length() &&
+            if (position_x+2 < s.length() && s.toCharArray()[position_x+1]=='^') {
                 if (s.indexOf("R") == -1) {
                     power_of_x = Double.parseDouble(s.substring(position_x+2,position_y));
                 }
@@ -496,7 +435,7 @@ public class Parsing {
             else {
                 power_of_x = 1;
             }
-            if (position_y+2 < s.length() && s.toCharArray()[position_y+1]=='^') {//изменение 11.02 23:20 добавила position_y+2 < s.length() &&
+            if (position_y+2 < s.length() && s.toCharArray()[position_y+1]=='^') {
                 if (s.indexOf("R") == -1) {
                     power_of_y = Double.parseDouble(s.substring(position_y+2));
                 }
@@ -508,7 +447,6 @@ public class Parsing {
                 power_of_y = 1;
             }
             res = new double[]{Double.parseDouble(koeff_before), power_of_x , power_of_y, 0.0};
-            // return  res;
         }
 
         if (s.indexOf("R") != -1 ) {
@@ -555,8 +493,7 @@ public class Parsing {
         }
         return option;
     }
-    //изменение от 11.02 22:10 - добавила умножение на коэфф
-    //изменение от 11.02 22:30 - добавила умножение на r^n
+
     public static double[][] polar_coord(double[] after_parse, int option, int array_len, double r, double x_0, double y_0) {
         double[][] triginomertic_funct = new double[2][array_len];
         double[] temp = null;
@@ -577,30 +514,14 @@ public class Parsing {
                 break;
 
             case 2:
-//                double division = 0;
-//                if (after_parse[3] !=1) {
-//                    division = after_parse[1]-after_parse[3];
-//                }
                 temp = parentheses_for_cos((int)after_parse[1], x_0, r);
 
                 for(int i=0; i<temp.length;i++){
                     if (temp[i]!=0.0) {//этот if нужен так как иначе на первом месте получаем -0.0 если коэфф отриц
-                        //if(i==0) {//для констант
-//                            if(after_parse[2]%2 == 0) {// четная степень
-//                                int n = (int)after_parse[2];
-//                                triginomertic_funct[0][i] = (x_0 +factorialUsingRecursion(n)/(factorialUsingRecursion(n/2)*factorialUsingRecursion(n-n/2)) / Math.pow(2, n)* Math.pow(r, n)) * temp[i];
-//                            }else {
-//                                triginomertic_funct[0][i] = x_0 * temp[i];
-//                            }
-                        //}else {
-                        triginomertic_funct[0][i] = temp[i] * after_parse[0]/division;//  * Math.pow(r,(int)after_parse[1]*i)    * Math.pow(r, (int)after_parse[1]*i)
-                        // }
+                        triginomertic_funct[0][i] = temp[i] * after_parse[0]/division;
                     }
                 }
 
-//                double const_from_cos_and_sin = triginomertic_funct[0][0] + triginomertic_funct[1][0];
-//                triginomertic_funct[0][0] = const_from_cos_and_sin;
-//                triginomertic_funct[1][0] = const_from_cos_and_sin;
                 triginomertic_funct[1][0] = triginomertic_funct[0][0];
                 break;
 
@@ -608,61 +529,37 @@ public class Parsing {
                 temp  = parentheses_for_cos((int)after_parse[1], x_0, r);
                 for(int i=0; i<temp.length;i++){
                     if (temp[i]!=0.0) {//этот if нужен так как иначе на первом месте получаем -0.0 если коэфф отриц
-                        triginomertic_funct[0][i] = temp[i] * after_parse[0]/division;// * after_parse[0]* Math.pow(r,(int)after_parse[1]*i)  * Math.pow(r, (int)after_parse[1]*i)
+                        triginomertic_funct[0][i] = temp[i] * after_parse[0]/division;
                     }
                 }
-//                const_from_cos_and_sin = triginomertic_funct[0][0] + triginomertic_funct[1][0];
-//                triginomertic_funct[0][0] = const_from_cos_and_sin;
-//                triginomertic_funct[1][0] = const_from_cos_and_sin;
                 triginomertic_funct[1][0] = triginomertic_funct[0][0];
                 break;
 
             case 4:
                 temp = koeff_sin_even((int)after_parse[2]);
-//                for(int i=0; i<temp.length;i++){
-//                    if (temp[i]!=0.0) {
-//                        triginomertic_funct[0][i] = temp[i] * after_parse[0] * Math.pow(r,(int)after_parse[2]);// * after_parse[0]
-//                    }
-//                }
                 triginomertic_funct = parentheses_for_sin((int)after_parse[2],y_0,r);
                 for (int i = 0; i < triginomertic_funct.length; i++) {
                     for (int j = 0; j < triginomertic_funct[i].length; j++) {
                         if (temp[i]!=0.0 || triginomertic_funct[i][j] !=0) {
-                            triginomertic_funct[i][j] *= after_parse[0]/division;// * Math.pow(r, (int) after_parse[2]*j)   * Math.pow(r, (int) after_parse[2])
+                            triginomertic_funct[i][j] *= after_parse[0]/division;
                         }
                     }
                 }
-
-//                const_from_cos_and_sin = triginomertic_funct[0][0] + triginomertic_funct[1][0];
-//                triginomertic_funct[0][0] = const_from_cos_and_sin;
-//                triginomertic_funct[1][0] = const_from_cos_and_sin;
-
                 triginomertic_funct[1][0] = triginomertic_funct[0][0];
 
                 break;
 
             case 5:
                 temp = koeff_sin_odd((int)after_parse[2]);
-//                for(int i=0; i<temp.length;i++){
-//                    if (temp[i]!=0.0) {
-//                        triginomertic_funct[1][i] = temp[i] * after_parse[0] * Math.pow(r,(int)after_parse[2]);// * after_parse[0]
-//                    }
-//                }
                 triginomertic_funct = parentheses_for_sin((int)after_parse[2],y_0, r);
 
                 for (int i = 0; i < triginomertic_funct.length; i++) {
                     for (int j = 0; j < triginomertic_funct[i].length; j++) {
                         if (temp[i]!=0.0 || triginomertic_funct[i][j] !=0.0) {
-                            triginomertic_funct[i][j] *= after_parse[0]/division;//UPDATE * Math.pow(r, (int) after_parse[2]*j)  * Math.pow(r, (int) after_parse[2])
+                            triginomertic_funct[i][j] *= after_parse[0]/division;
                         }
                     }
                 }
-
-//                const_from_cos_and_sin = triginomertic_funct[0][0] + triginomertic_funct[1][0];
-//                triginomertic_funct[0][0] = const_from_cos_and_sin;
-//                if ((int)after_parse[2] > 1) {
-//                    triginomertic_funct[1][0] = after_parse[0];
-//                }
 
                 triginomertic_funct[1][0] = triginomertic_funct[0][0];
                 break;
@@ -671,44 +568,31 @@ public class Parsing {
                 temp_cos = mixed_multy(after_parse[0],(int)after_parse[1],(int)after_parse[2], x_0, y_0, r);
                 for(int i=0; i<temp_cos.length;i++){
                     if(temp_cos[i]!=0.0) {
-                        triginomertic_funct[0][i] = temp_cos[i] * after_parse[0]/division;// * after_parse[0] * Math.pow(r,(int)((after_parse[1])*i))    * Math.pow(r,(int)((after_parse[1]+after_parse[2])))
+                        triginomertic_funct[0][i] = temp_cos[i] * after_parse[0]/division;
                     }
                 }
                 temp_sin = mixed_multy_sin(after_parse[0],(int)after_parse[1],(int)after_parse[2], x_0, y_0, r);
                 for(int i=0; i<temp_sin.length;i++){
                     if(temp_sin[i]!=0.0) {
-                        triginomertic_funct[1][i] = temp_sin[i] * after_parse[0]/division;// * after_parse[0] * Math.pow(r,(int)((after_parse[2])*i))    * Math.pow(r,(int)((after_parse[2]+after_parse[2])))
-                    }
+                        triginomertic_funct[1][i] = temp_sin[i] * after_parse[0]/division;
                 }
-
-//                const_from_cos_and_sin = triginomertic_funct[0][0] + triginomertic_funct[1][0];
-//                triginomertic_funct[0][0] = const_from_cos_and_sin;
-//                triginomertic_funct[1][0] = const_from_cos_and_sin;
 
                 triginomertic_funct[1][0] = triginomertic_funct[0][0];
                 break;
-//08.03.2022
             case 7:
-                //int k = 0;
+
                 temp_sin = mixed_multy_sin(after_parse[0],(int)after_parse[1],(int)after_parse[2], x_0, y_0, r);
                 for(int i=0; i<temp_sin.length;i++){
                     if(temp_sin[i]!=0.0) {
-                        triginomertic_funct[1][i] = temp_sin[i] * after_parse[0]/division;//* after_parse[0] * Math.pow(r,(int)((after_parse[2])*i))      * Math.pow(r,(int)(after_parse[2]))
-                        //k++;
+                        triginomertic_funct[1][i] = temp_sin[i] * after_parse[0]/division;
                     }
                 }
-                // k = 0;
                 temp_cos = mixed_multy(after_parse[0],(int)after_parse[1],(int)after_parse[2], x_0, y_0, r);
                 for(int i=0; i<temp_cos.length;i++){
                     if(temp_cos[i]!=0.0) {
-                        triginomertic_funct[0][i] = temp_cos[i] * after_parse[0]/division;//* after_parse[0]* Math.pow(r,(int)((after_parse[1])*i))    * Math.pow(r,(int)((after_parse[1])))
-                        //k++;
+                        triginomertic_funct[0][i] = temp_cos[i] * after_parse[0]/division;
                     }
                 }
-
-//                const_from_cos_and_sin = triginomertic_funct[0][0] + triginomertic_funct[1][0];
-//                triginomertic_funct[0][0] = const_from_cos_and_sin;
-//                triginomertic_funct[1][0] = const_from_cos_and_sin;
 
                 triginomertic_funct[1][0] = triginomertic_funct[0][0];
                 break;
@@ -731,24 +615,20 @@ public class Parsing {
         double max_power = 0; //чтобы определить макс длину массива
         for (int i = 0; i < res.length; i++) {
             after_parse = parse_member_from_equation(res[i]);
-            for (int j =0; j<after_parse.length-1; j++) {//UPDATE 10.03 -1 так как добавилось after_parse[3] которое отвечает за деление
-                //System.out.print(after_parse[j] + " " );
+            for (int j =0; j<after_parse.length-1; j++) {
                 if (j==0 && after_parse[j+1]+after_parse[j+2] > max_power) {
                     max_power = after_parse[j+1]+after_parse[j+2];
                 }
-                //System.out.print("\nmax_power" + max_power + " " );
+                
             }
-            //System.out.println(define_trig(after_parse));
-            //System.out.println(res[i]);
-            //polar_coord(after_parse,define_trig(after_parse),(int) max_power);//вместо res.length -> max_power (изменение от 11.02 23:00)
-        }
+          }
         double[][] summ_trig = new double[2][(int)max_power+1];
         double[][] trig_in_polar = null;
-        //System.out.println("conditional_in_polar_coord ");
+
         for (int i = 0; i < res.length; i++) {
             after_parse = parse_member_from_equation(res[i]);
             System.out.println(res[i]);
-            trig_in_polar = polar_coord(after_parse,define_trig(after_parse),(int) max_power+1, r, x_0,y_0);//вместо res.length -> max_power (изменение от 11.02 23:00)
+            trig_in_polar = polar_coord(after_parse,define_trig(after_parse),(int) max_power+1, r, x_0,y_0);
             for (int j = 0; j < 2; j++) {
                 for (int k = 0; k < trig_in_polar[j].length; k++) {
                     summ_trig[j][k] += trig_in_polar[j][k];
